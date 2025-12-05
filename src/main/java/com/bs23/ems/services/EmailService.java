@@ -1,0 +1,32 @@
+package com.bs23.ems.services;
+
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+@Service
+public class EmailService {
+
+    private final JavaMailSender mailSender;
+
+    public EmailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
+    public void sendEmail(String to, String subject, String body) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+
+            message.setTo(to);
+            message.setSubject(subject);
+            message.setText(body);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            // Log the error but don't throw it to avoid breaking the main functionality
+            System.err.println("Failed to send email notification: " + e.getMessage());
+            // In production, you might want to use a proper logging framework
+            // logger.error("Failed to send email notification", e);
+        }
+    }
+}
